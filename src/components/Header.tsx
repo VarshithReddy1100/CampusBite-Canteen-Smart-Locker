@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
   const isCustomizer = currentScreen === 'customizer';
 
   return (
-    <header className="fixed top-0 w-full z-50 pt-safe bg-[#faf8ff]/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-[#eaedff]/70">
+    <header className="fixed top-0 w-full z-50 pt-safe bg-[#faf8ff]/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-[#eaedff]/70 md:hidden">
       <div className="max-w-md mx-auto h-16 md:h-20 px-4 flex items-center justify-between gap-2">
         {isCustomizer ? (
           <div className="flex items-center gap-2 min-w-0 flex-1">

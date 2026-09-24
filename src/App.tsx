@@ -7,6 +7,7 @@ import {
   INITIAL_NOTIFICATIONS,
 } from './data/mockData';
 import { Header } from './components/Header';
+import { DesktopHeader } from './components/DesktopHeader';
 import { BottomNav } from './components/BottomNav';
 import { ExploreScreen } from './components/screens/ExploreScreen';
 import { ItemCustomizerScreen } from './components/screens/ItemCustomizerScreen';
@@ -14,6 +15,8 @@ import { CartScreen } from './components/screens/CartScreen';
 import { OrderTrackingScreen } from './components/screens/OrderTrackingScreen';
 import { NotificationsScreen } from './components/screens/NotificationsScreen';
 import { StudentIdScreen } from './components/screens/StudentIdScreen';
+
+type DeviceMode = 'auto' | 'desktop' | 'tablet' | 'mobile';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('explore');
@@ -23,6 +26,7 @@ export default function App() {
   const [notifications, setNotifications] = useState<NotificationItem[]>(INITIAL_NOTIFICATIONS);
   const [selectedCanteen, setSelectedCanteen] = useState<string>('Student Union Canteen 1');
   const [checkoutToast, setCheckoutToast] = useState(false);
+  const [deviceMode, setDeviceMode] = useState<DeviceMode>('auto');
 
   // Cart calculations
   const cartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
@@ -150,63 +154,156 @@ export default function App() {
     setNotifications((prev) => prev.map((n) => ({ ...n, isUnread: false })));
   };
 
+  // Determine wrapper container classes based on deviceMode toggle
+  const getContainerClasses = () => {
+    if (deviceMode === 'mobile') {
+      return 'w-full max-w-sm my-6 rounded-[2.5rem] border-[6px] border-[#131b2e] shadow-2xl overflow-hidden min-h-[820px] bg-[#faf8ff]';
+    }
+    if (deviceMode === 'tablet') {
+      return 'w-full max-w-3xl my-6 rounded-3xl border-2 border-[#eaedff] shadow-xl overflow-hidden min-h-[900px] bg-[#faf8ff]';
+    }
+    if (deviceMode === 'desktop') {
+      return 'w-full max-w-7xl my-4 rounded-3xl shadow-sm border border-[#eaedff] min-h-screen bg-[#faf8ff]';
+    }
+    // Auto: default responsive behavior
+    return 'w-full min-h-screen bg-[#faf8ff] flex flex-col relative overflow-x-hidden';
+  };
+
+  const isForcedMobile = deviceMode === 'mobile';
+  const isForcedDesktopOrTablet = deviceMode === 'desktop' || deviceMode === 'tablet';
+
   return (
-    <div className="min-h-screen bg-[#eaedff]/40 flex flex-col items-center justify-start text-[#131b2e]">
-      {/* Desktop Quick Screen Navigator Bar (Subtle top helper for testing) */}
-      <div className="w-full bg-[#283044] text-white/90 text-xs py-1.5 px-4 hidden md:flex items-center justify-between z-50 border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <span className="font-extrabold text-[#ff6b35] tracking-wider uppercase text-[11px]">
-            CampusBite
-          </span>
-          <span className="text-white/40">|</span>
-          <span className="text-white/80">Interactive Screen Switcher:</span>
+    <div className="min-h-screen bg-[#f0f2fa] flex flex-col items-center justify-start text-[#131b2e]">
+      {/* Top Helper Bar: Device View Mode Switcher + Screen Jump Buttons */}
+      <div className="w-full bg-[#131b2e] text-white/90 text-xs py-2 px-4 flex flex-wrap items-center justify-between gap-3 z-50 border-b border-white/10 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 font-extrabold text-[#ff6b35] tracking-wider uppercase text-[11px]">
+            <span className="material-symbols-outlined text-[16px]">devices</span>
+            <span>CampusBite Multi-Device UI</span>
+          </div>
+
+          <div className="h-4 w-px bg-white/20 hidden sm:block"></div>
+
+          {/* Device Mode Switcher */}
+          <div className="flex items-center bg-white/10 p-0.5 rounded-xl gap-0.5">
+            <button
+              onClick={() => setDeviceMode('auto')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                deviceMode === 'auto'
+                  ? 'bg-[#ff6b35] text-white shadow-xs'
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[14px]">responsive_layout</span>
+              <span>Auto (Responsive)</span>
+            </button>
+            <button
+              onClick={() => setDeviceMode('desktop')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                deviceMode === 'desktop'
+                  ? 'bg-[#ff6b35] text-white shadow-xs'
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[14px]">desktop_windows</span>
+              <span>Desktop</span>
+            </button>
+            <button
+              onClick={() => setDeviceMode('tablet')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                deviceMode === 'tablet'
+                  ? 'bg-[#ff6b35] text-white shadow-xs'
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[14px]">tablet_mac</span>
+              <span>Tablet</span>
+            </button>
+            <button
+              onClick={() => setDeviceMode('mobile')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                deviceMode === 'mobile'
+                  ? 'bg-[#ff6b35] text-white shadow-xs'
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[14px]">smartphone</span>
+              <span>Mobile</span>
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5 overflow-x-auto">
+
+        {/* Quick Screen Selector */}
+        <div className="flex items-center gap-1 overflow-x-auto">
           {(['explore', 'customizer', 'cart', 'orders', 'notifications', 'student-id'] as ScreenType[]).map(
             (scr) => (
               <button
                 key={scr}
                 onClick={() => setCurrentScreen(scr)}
-                className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold transition-all ${
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
                   currentScreen === scr
-                    ? 'bg-[#ff6b35] text-white'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                    ? 'bg-white text-[#131b2e] font-extrabold shadow-xs'
+                    : 'bg-white/5 text-white/70 hover:bg-white/15'
                 }`}
               >
-                {scr === 'explore' && '1. Explore Menu'}
-                {scr === 'customizer' && '2. Item Customizer'}
-                {scr === 'cart' && '3. Campus Tray'}
-                {scr === 'orders' && '4. Locker Pass (Orders)'}
-                {scr === 'notifications' && '5. Notifications'}
-                {scr === 'student-id' && '6. Student ID'}
+                {scr === 'explore' && 'Menu'}
+                {scr === 'customizer' && 'Customizer'}
+                {scr === 'cart' && `Tray (${cartCount})`}
+                {scr === 'orders' && 'Locker Pass'}
+                {scr === 'notifications' && `Alerts (${unreadNotificationsCount})`}
+                {scr === 'student-id' && 'Student Pass'}
               </button>
             )
           )}
         </div>
       </div>
 
-      {/* Main Smartphone Shell / Viewport Frame */}
-      <div className="w-full max-w-md min-h-screen bg-[#faf8ff] flex flex-col relative shadow-2xl overflow-x-hidden">
-        {/* Top Header */}
-        <Header
-          currentScreen={currentScreen}
-          onNavigate={setCurrentScreen}
-          unreadCount={unreadNotificationsCount}
-          selectedCanteen={selectedCanteen}
-          onSelectCanteen={setSelectedCanteen}
-          onBack={() => setCurrentScreen('explore')}
-        />
+      {/* Main Viewport Container */}
+      <div className={getContainerClasses()}>
+        {/* Desktop Header (Shown on desktop & tablet, hidden on mobile) */}
+        {!isForcedMobile && (
+          <div className={isForcedDesktopOrTablet ? 'block' : 'hidden md:block'}>
+            <DesktopHeader
+              currentScreen={currentScreen}
+              onNavigate={setCurrentScreen}
+              unreadCount={unreadNotificationsCount}
+              cartCount={cartCount}
+              cartTotal={cartTotal}
+              hasActiveOrder={order.status === 'cooking' || order.status === 'ready'}
+              selectedCanteen={selectedCanteen}
+              onSelectCanteen={setSelectedCanteen}
+              onBack={() => setCurrentScreen('explore')}
+            />
+          </div>
+        )}
 
-        {/* Screen Container */}
-        <main className="flex-1 w-full pt-16 md:pt-20">
+        {/* Mobile Header (Shown on mobile, hidden on tablet & desktop) */}
+        {!isForcedDesktopOrTablet && (
+          <div className={isForcedMobile ? 'block' : 'md:hidden'}>
+            <Header
+              currentScreen={currentScreen}
+              onNavigate={setCurrentScreen}
+              unreadCount={unreadNotificationsCount}
+              selectedCanteen={selectedCanteen}
+              onSelectCanteen={setSelectedCanteen}
+              onBack={() => setCurrentScreen('explore')}
+            />
+          </div>
+        )}
+
+        {/* Main Content Area */}
+        <main className={`flex-1 w-full ${!isForcedDesktopOrTablet && !isForcedMobile ? 'pt-16 md:pt-4' : isForcedMobile ? 'pt-16' : 'pt-4'}`}>
           {currentScreen === 'explore' && (
             <ExploreScreen
               onSelectItem={handleSelectItem}
               onQuickAdd={handleQuickAdd}
               cartCount={cartCount}
               cartTotal={cartTotal}
+              cartItems={cartItems}
+              onUpdateQuantity={handleUpdateQuantity}
               onViewTray={() => setCurrentScreen('cart')}
               onNavigate={setCurrentScreen}
+              isDesktopView={deviceMode === 'desktop' || deviceMode === 'tablet'}
             />
           )}
 
@@ -254,15 +351,19 @@ export default function App() {
           )}
         </main>
 
-        {/* Global Bottom Navigation */}
-        <BottomNav
-          currentScreen={currentScreen}
-          onNavigate={setCurrentScreen}
-          cartCount={cartCount}
-          hasActiveOrder={order.status === 'cooking' || order.status === 'ready'}
-        />
+        {/* Mobile Bottom Navigation (Shown only on mobile) */}
+        {!isForcedDesktopOrTablet && (
+          <div className={isForcedMobile ? 'block' : 'md:hidden'}>
+            <BottomNav
+              currentScreen={currentScreen}
+              onNavigate={setCurrentScreen}
+              cartCount={cartCount}
+              hasActiveOrder={order.status === 'cooking' || order.status === 'ready'}
+            />
+          </div>
+        )}
 
-        {/* Checkout Confirmation Overlay */}
+        {/* Checkout Confirmation Toast Overlay */}
         {checkoutToast && (
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 text-center max-w-xs shadow-2xl border border-[#eaedff] animate-fade-in flex flex-col items-center">

@@ -15,7 +15,7 @@ export const ItemCustomizerScreen: React.FC<ItemCustomizerScreenProps> = ({
   onViewTray,
   onBack,
 }) => {
-  const basePrice = item ? item.price : 6.80;
+  const basePrice = item ? item.price : 6.8;
 
   // Form selections
   const [selectedGrain, setSelectedGrain] = useState<{ name: string; price: number; desc: string }>({
@@ -114,8 +114,8 @@ export const ItemCustomizerScreen: React.FC<ItemCustomizerScreenProps> = ({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'CampusBite: Teriyaki Glazed Chicken Grain Bowl',
-          text: 'Order the best campus teriyaki bowl with heated locker pickup!',
+          title: `CampusBite: ${item?.name || 'Teriyaki Glazed Chicken Grain Bowl'}`,
+          text: 'Order the best campus food with heated locker pickup!',
           url: window.location.href,
         });
       } catch {
@@ -128,428 +128,448 @@ export const ItemCustomizerScreen: React.FC<ItemCustomizerScreenProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full pb-36">
-      {/* Hero Media Canvas */}
-      <div className="relative w-full h-72 overflow-hidden bg-[#e2e7ff]">
-        <img
-          className="w-full h-full object-cover"
-          alt="Teriyaki Glazed Chicken Grain Bowl"
-          src={APP_ASSETS.teriyakiBowlHero}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#faf8ff] via-transparent to-black/30 pointer-events-none"></div>
-
-        {/* Floating Top Utility Badges */}
-        <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
-          <button
-            aria-label="Save to favorites"
-            onClick={() => setIsFavorite(!isFavorite)}
-            className={`w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center transition-all active:scale-90 ${
-              isFavorite ? 'text-[#ab3500]' : 'text-[#131b2e] hover:text-[#ab3500]'
-            }`}
-          >
-            <span
-              className="material-symbols-outlined text-[20px] transition-transform"
-              style={isFavorite ? { fontVariationSettings: "'FILL' 1" } : {}}
-            >
-              favorite
-            </span>
-          </button>
-          <button
-            aria-label="Share item"
-            onClick={handleShare}
-            className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center text-[#131b2e] hover:text-[#ab3500] active:scale-90 transition-all"
-          >
-            <span className="material-symbols-outlined text-[20px]">share</span>
-          </button>
-        </div>
-
-        {/* Meal Plan Qualifier Floating Chip */}
-        <div className="absolute bottom-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#6cf8bb] text-[#00714d] shadow-md z-10">
-          <span
-            className="material-symbols-outlined text-[16px]"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            verified
-          </span>
-          <span className="text-[0.6875rem] font-bold uppercase tracking-wide">
-            Student Meal Plan Tier 1
-          </span>
-        </div>
+    <div className="flex flex-col w-full pb-36 md:pb-16 max-w-6xl mx-auto px-4 md:px-6 pt-2">
+      {/* Tablet & Desktop Back Button */}
+      <div className="hidden md:flex items-center gap-2 mb-4">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-xs font-bold text-[#594139] hover:text-[#ab3500] px-3 py-1.5 rounded-xl bg-white border border-[#eaedff] shadow-xs transition-colors"
+        >
+          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+          <span>Back to Canteen Stalls</span>
+        </button>
+        <span className="text-xs text-[#8d7168]">/</span>
+        <span className="text-xs font-semibold text-[#131b2e]">{item?.station || 'Station 3'}</span>
+        <span className="text-xs text-[#8d7168]">/</span>
+        <span className="text-xs font-bold text-[#ab3500]">{item?.name || 'Customizer'}</span>
       </div>
 
-      {/* Item Title & Key Overview */}
-      <div className="px-4 pt-4 flex flex-col gap-2">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <span className="text-xs text-[#ab3500] font-bold tracking-wide uppercase">
-              Station 3 • Golden Wok Bar
-            </span>
-            <h2 className="text-xl font-extrabold text-[#131b2e] mt-0.5 leading-snug">
-              {item ? item.name : 'Teriyaki Glazed Chicken Grain Bowl'}
-            </h2>
+      {/* Responsive Grid: 1 col on mobile, 2 cols on tablet & desktop */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-start">
+        {/* Left Column (Hero Image & Nutrition Attributes) */}
+        <div className="md:col-span-5 md:sticky md:top-28 flex flex-col gap-4">
+          {/* Hero Media Canvas */}
+          <div className="relative w-full h-72 md:h-80 lg:h-96 rounded-3xl overflow-hidden bg-[#e2e7ff] shadow-md border border-[#eaedff]">
+            <img
+              className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+              alt={item?.name || 'Teriyaki Glazed Chicken Grain Bowl'}
+              src={item?.image || APP_ASSETS.teriyakiBowlHero}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none"></div>
+
+            {/* Floating Top Utility Badges */}
+            <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+              <button
+                aria-label="Save to favorites"
+                onClick={() => setIsFavorite(!isFavorite)}
+                className={`w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center transition-all active:scale-90 ${
+                  isFavorite ? 'text-[#ab3500]' : 'text-[#131b2e] hover:text-[#ab3500]'
+                }`}
+              >
+                <span
+                  className="material-symbols-outlined text-[20px] transition-transform"
+                  style={isFavorite ? { fontVariationSettings: "'FILL' 1" } : {}}
+                >
+                  favorite
+                </span>
+              </button>
+              <button
+                aria-label="Share item"
+                onClick={handleShare}
+                className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center text-[#131b2e] hover:text-[#ab3500] active:scale-90 transition-all"
+              >
+                <span className="material-symbols-outlined text-[20px]">share</span>
+              </button>
+            </div>
+
+            {/* Meal Plan Qualifier Floating Chip */}
+            <div className="absolute bottom-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#6cf8bb] text-[#00714d] shadow-md z-10">
+              <span
+                className="material-symbols-outlined text-[16px]"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              >
+                verified
+              </span>
+              <span className="text-[0.6875rem] md:text-xs font-extrabold uppercase tracking-wide">
+                Campus Meal Plan Tier 1 Eligible
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col items-end flex-shrink-0">
-            <span className="text-2xl font-black text-[#ab3500]">
-              ${basePrice.toFixed(2)}
-            </span>
-            <span className="text-xs text-[#8d7168] line-through">
-              ${(basePrice * 1.25).toFixed(2)} Reg
-            </span>
+
+          {/* Nutrition & Macro Card (Rich on Tablet & Desktop) */}
+          <div className="bg-white rounded-3xl p-5 shadow-sm border border-[#eaedff] flex flex-col gap-3">
+            <h4 className="text-xs font-extrabold text-[#131b2e] uppercase tracking-wider">
+              Nutritional Profile &amp; Dietary
+            </h4>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-[#eaedff]/60 rounded-2xl p-2.5 text-center flex flex-col items-center">
+                <span className="text-xs text-[#8d7168] font-bold">Calories</span>
+                <span className="text-base font-black text-[#131b2e] mt-0.5">
+                  {item?.calories || '610'}
+                </span>
+                <span className="text-[10px] text-[#594139]">kcal</span>
+              </div>
+              <div className="bg-[#eaedff]/60 rounded-2xl p-2.5 text-center flex flex-col items-center">
+                <span className="text-xs text-[#8d7168] font-bold">Protein</span>
+                <span className="text-base font-black text-[#006c49] mt-0.5">
+                  {item?.protein || '38g'}
+                </span>
+                <span className="text-[10px] text-[#006c49] font-semibold">High Fuel</span>
+              </div>
+              <div className="bg-[#eaedff]/60 rounded-2xl p-2.5 text-center flex flex-col items-center">
+                <span className="text-xs text-[#8d7168] font-bold">Prep Time</span>
+                <span className="text-base font-black text-[#ab3500] mt-0.5">
+                  {item?.prepTime || '8 min'}
+                </span>
+                <span className="text-[10px] text-[#594139]">Fast Line</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              <span className="text-[11px] font-bold text-[#005236] bg-[#6cf8bb]/30 px-2.5 py-1 rounded-full flex items-center gap-1">
+                <span className="material-symbols-outlined text-[14px]">eco</span>
+                Halal Certified
+              </span>
+              <span className="text-[11px] font-bold text-[#131b2e] bg-[#eaedff] px-2.5 py-1 rounded-full flex items-center gap-1">
+                <span className="material-symbols-outlined text-[14px]">psychology</span>
+                Brain Fuel (Low GI)
+              </span>
+            </div>
+
+            {/* Locker Pickup Note */}
+            <div className="flex items-center gap-2.5 pt-2 border-t border-[#eaedff] text-xs text-[#594139]">
+              <span className="material-symbols-outlined text-[#ab3500] text-[18px]">
+                lock_clock
+              </span>
+              <span>Heated to 60°C inside Student Union Locker Pod B.</span>
+            </div>
           </div>
         </div>
 
-        <p className="text-sm text-[#594139] leading-relaxed">
-          {item
-            ? item.description
-            : 'Tender grilled chicken thigh glazed in authentic mirin-teriyaki, resting over your choice of hearty whole grains with fresh, quick-prepped crisp seasonal toppings.'}
-        </p>
-
-        {/* Quick Attributes Strip */}
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#eaedff] text-[#131b2e]">
-            <span
-              className="material-symbols-outlined text-[16px] text-[#855300]"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              fitness_center
-            </span>
-            <span className="text-xs font-semibold">{item?.protein || '38g Protein'}</span>
-          </div>
-          <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#eaedff] text-[#131b2e]">
-            <span className="material-symbols-outlined text-[16px] text-[#006c49]">eco</span>
-            <span className="text-xs font-semibold">Halal Certified</span>
-          </div>
-          <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#eaedff] text-[#131b2e]">
-            <span className="material-symbols-outlined text-[16px] text-[#8d7168]">
-              local_fire_department
-            </span>
-            <span className="text-xs font-semibold">{item?.calories || '610'} kcal</span>
-          </div>
-        </div>
-
-        {/* Live Prep Banner */}
-        <div className="mt-2 flex items-center justify-between p-3 rounded-2xl bg-[#f2f3ff] shadow-xs border border-[#eaedff]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-[#ff6b35]/15 flex items-center justify-center text-[#ab3500]">
-              <span className="material-symbols-outlined text-[20px]">bolt</span>
+        {/* Right Column: Customization Wizard & Add to Tray Action */}
+        <div className="md:col-span-7 flex flex-col gap-5">
+          {/* Item Title & Overview Banner */}
+          <div className="bg-white rounded-3xl p-5 md:p-6 shadow-sm border border-[#eaedff] flex flex-col gap-3">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <span className="text-xs text-[#ab3500] font-extrabold tracking-wider uppercase">
+                  {item?.station || 'Station 3'} • {item?.stationTag || 'Golden Wok Bar'}
+                </span>
+                <h1 className="text-xl md:text-2xl font-black text-[#131b2e] mt-1 leading-snug">
+                  {item ? item.name : 'Teriyaki Glazed Chicken Grain Bowl'}
+                </h1>
+              </div>
+              <div className="flex flex-col items-end flex-shrink-0">
+                <span className="text-2xl md:text-3xl font-black text-[#ab3500]">
+                  ${basePrice.toFixed(2)}
+                </span>
+                <span className="text-xs text-[#8d7168] line-through">
+                  ${(basePrice * 1.25).toFixed(2)} Reg
+                </span>
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-bold text-[#131b2e]">⚡ Quick Prep Campus Priority</p>
-              <p className="text-[11px] text-[#594139]">
-                Ready at North Quad Locker in ~9 mins
-              </p>
-            </div>
-          </div>
-          <span className="w-2.5 h-2.5 rounded-full bg-[#006c49] animate-pulse" title="Live status ready"></span>
-        </div>
-      </div>
 
-      {/* Customization Form Sections */}
-      <form className="flex flex-col gap-6 mt-6 px-4" onSubmit={(e) => e.preventDefault()}>
-        {/* 1. Base Grain Selection (Radio - Single Choice) */}
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-bold text-[#131b2e]">1. Select Grain Base</h3>
-              <p className="text-xs text-[#594139]">Choose your warm foundational carbs</p>
-            </div>
-            <span className="text-[10px] bg-[#ff6b35]/10 text-[#ab3500] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-              Required
-            </span>
+            <p className="text-sm text-[#594139] leading-relaxed">
+              {item
+                ? item.description
+                : 'Tender grilled chicken thigh glazed in authentic mirin-teriyaki, resting over your choice of hearty whole grains with fresh, quick-prepped crisp seasonal toppings.'}
+            </p>
           </div>
 
-          <div className="flex flex-col gap-2">
-            {grainOptions.map((grain) => {
-              const isSelected = selectedGrain.name === grain.name;
-              return (
+          {/* Customization Form */}
+          <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
+            {/* 1. Grain Selection */}
+            <section className="bg-white rounded-3xl p-5 shadow-sm border border-[#eaedff] flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-[#131b2e]">1. Select Grain Base</h3>
+                  <p className="text-xs text-[#594139]">Choose your foundational carbs</p>
+                </div>
+                <span className="text-[10px] bg-[#ff6b35]/15 text-[#ab3500] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                  Required
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                {grainOptions.map((grain) => {
+                  const isSelected = selectedGrain.name === grain.name;
+                  return (
+                    <label
+                      key={grain.name}
+                      onClick={() => setSelectedGrain(grain)}
+                      className={`relative flex items-center justify-between p-3.5 rounded-2xl border transition-all cursor-pointer active:scale-[0.99] ${
+                        isSelected
+                          ? 'bg-[#faf8ff] border-[#ff6b35] shadow-xs ring-1 ring-[#ff6b35]/30'
+                          : 'bg-white border-[#eaedff] hover:border-[#dae2fd]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <input
+                          checked={isSelected}
+                          onChange={() => setSelectedGrain(grain)}
+                          className="w-5 h-5 accent-[#ab3500] cursor-pointer"
+                          name="base_selection"
+                          type="radio"
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-[#131b2e]">{grain.name}</span>
+                          <span className="text-xs text-[#594139]">{grain.desc}</span>
+                        </div>
+                      </div>
+                      <span
+                        className={`text-xs font-bold ${
+                          grain.price > 0 ? 'text-[#ab3500]' : 'text-[#006c49]'
+                        }`}
+                      >
+                        {grain.label}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* 2. Protein Portion */}
+            <section className="bg-white rounded-3xl p-5 shadow-sm border border-[#eaedff] flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-[#131b2e]">2. Protein Portion</h3>
+                  <p className="text-xs text-[#594139]">Fuel up for afternoon classes</p>
+                </div>
+                <span className="text-[10px] bg-[#ff6b35]/15 text-[#ab3500] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                  Required
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <label
-                  key={grain.name}
-                  onClick={() => setSelectedGrain(grain)}
-                  className={`relative flex items-center justify-between p-3.5 rounded-2xl border transition-all cursor-pointer active:scale-[0.99] ${
-                    isSelected
-                      ? 'bg-white border-[#ff6b35] shadow-sm'
+                  onClick={() =>
+                    setSelectedProtein({
+                      name: 'Standard (150g Cutlet)',
+                      price: 0.0,
+                      desc: 'Included',
+                    })
+                  }
+                  className={`flex flex-col justify-between p-4 rounded-2xl border transition-all cursor-pointer ${
+                    selectedProtein.price === 0
+                      ? 'bg-[#faf8ff] border-[#ff6b35] shadow-xs ring-1 ring-[#ff6b35]/30'
                       : 'bg-white border-[#eaedff] hover:border-[#dae2fd]'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-start justify-between w-full">
+                    <span className="text-sm font-bold text-[#131b2e]">Standard Cutlet</span>
                     <input
-                      checked={isSelected}
-                      onChange={() => setSelectedGrain(grain)}
-                      className="w-5 h-5 accent-[#ab3500] cursor-pointer"
-                      name="base_selection"
+                      checked={selectedProtein.price === 0}
+                      onChange={() => {}}
+                      className="w-4 h-4 accent-[#ab3500]"
+                      name="protein_level"
                       type="radio"
                     />
-                    <div className="flex flex-col">
-                      <span className="text-sm font-bold text-[#131b2e]">{grain.name}</span>
-                      <span className="text-xs text-[#594139]">{grain.desc}</span>
-                    </div>
                   </div>
-                  <span
-                    className={`text-xs font-bold ${
-                      grain.price > 0 ? 'text-[#ab3500]' : 'text-[#594139]'
-                    }`}
-                  >
-                    {grain.label}
-                  </span>
+                  <div className="mt-3">
+                    <span className="text-xs text-[#594139] block">150g Fresh Grilled Cutlet</span>
+                    <span className="text-xs text-[#006c49] font-bold mt-0.5 block">
+                      Included in Meal Plan
+                    </span>
+                  </div>
                 </label>
-              );
-            })}
-          </div>
-        </section>
 
-        {/* 2. Protein Portion (Radio) */}
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-bold text-[#131b2e]">2. Protein Portion</h3>
-              <p className="text-xs text-[#594139]">Fuel up for afternoon lectures</p>
-            </div>
-            <span className="text-[10px] bg-[#ff6b35]/10 text-[#ab3500] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-              Required
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5">
-            {/* Standard */}
-            <label
-              onClick={() =>
-                setSelectedProtein({
-                  name: 'Standard (150g Cutlet)',
-                  price: 0.0,
-                  desc: 'Included',
-                })
-              }
-              className={`flex flex-col justify-between p-3.5 rounded-2xl border transition-all cursor-pointer active:scale-[0.98] ${
-                selectedProtein.price === 0
-                  ? 'bg-white border-[#ff6b35] shadow-sm'
-                  : 'bg-white border-[#eaedff]'
-              }`}
-            >
-              <div className="flex items-start justify-between w-full">
-                <span className="text-sm font-bold text-[#131b2e]">Standard</span>
-                <input
-                  checked={selectedProtein.price === 0}
-                  onChange={() => {}}
-                  className="w-4 h-4 accent-[#ab3500]"
-                  name="protein_level"
-                  type="radio"
-                />
+                <label
+                  onClick={() =>
+                    setSelectedProtein({
+                      name: 'Double Fuel (+100g Extra)',
+                      price: 2.2,
+                      desc: '+100g Extra Cutlet',
+                    })
+                  }
+                  className={`flex flex-col justify-between p-4 rounded-2xl border transition-all cursor-pointer ${
+                    selectedProtein.price > 0
+                      ? 'bg-[#faf8ff] border-[#ff6b35] shadow-xs ring-1 ring-[#ff6b35]/30'
+                      : 'bg-white border-[#eaedff] hover:border-[#dae2fd]'
+                  }`}
+                >
+                  <div className="flex items-start justify-between w-full">
+                    <span className="text-sm font-bold text-[#131b2e]">Double Fuel (+100g)</span>
+                    <input
+                      checked={selectedProtein.price > 0}
+                      onChange={() => {}}
+                      className="w-4 h-4 accent-[#ab3500]"
+                      name="protein_level"
+                      type="radio"
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <span className="text-xs text-[#594139] block">+100g Extra Protein (250g)</span>
+                    <span className="text-xs text-[#ab3500] font-bold mt-0.5 block">+$2.20</span>
+                  </div>
+                </label>
               </div>
-              <div className="mt-4">
-                <span className="text-xs text-[#594139] block">150g Cutlet</span>
-                <span className="text-xs text-[#131b2e] font-semibold mt-0.5 block">
+            </section>
+
+            {/* 3. Free Add-ins */}
+            <section className="bg-white rounded-3xl p-5 shadow-sm border border-[#eaedff] flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-[#131b2e]">3. Free Add-ins</h3>
+                  <p className="text-xs text-[#594139]">Pick up to 3 fresh garnishes</p>
+                </div>
+                <span
+                  className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold transition-colors ${
+                    selectedAddins.length === 3
+                      ? 'bg-[#6cf8bb] text-[#00714d]'
+                      : 'bg-[#eaedff] text-[#131b2e]'
+                  }`}
+                >
+                  {selectedAddins.length} / 3 Selected
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2.5">
+                {addinOptions.map((opt) => {
+                  const isChecked = selectedAddins.includes(opt.name);
+                  return (
+                    <label
+                      key={opt.id}
+                      onClick={() => handleAddinToggle(opt.name)}
+                      className={`flex items-center gap-3 p-3 rounded-2xl border transition-all cursor-pointer ${
+                        isChecked
+                          ? 'bg-[#faf8ff] border-[#ff6b35] shadow-xs'
+                          : 'bg-white border-[#eaedff] hover:border-[#dae2fd]'
+                      }`}
+                    >
+                      <input
+                        checked={isChecked}
+                        onChange={() => {}}
+                        className="w-4 h-4 accent-[#ab3500] rounded"
+                        type="checkbox"
+                      />
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-bold text-[#131b2e] truncate">{opt.name}</span>
+                        <span className="text-[10px] text-[#594139]">{opt.desc}</span>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* 4. Sauce Preference */}
+            <section className="bg-white rounded-3xl p-5 shadow-sm border border-[#eaedff] flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-[#131b2e]">4. Sauce Choice</h3>
+                  <p className="text-xs text-[#594139]">How would you like your drizzle?</p>
+                </div>
+                <span className="text-[10px] bg-[#eaedff] text-[#131b2e] px-2.5 py-0.5 rounded-full font-bold">
                   Included
                 </span>
               </div>
-            </label>
 
-            {/* Double Fuel */}
-            <label
-              onClick={() =>
-                setSelectedProtein({
-                  name: 'Double Fuel (+100g Extra)',
-                  price: 2.2,
-                  desc: '+100g Extra Cutlet',
-                })
-              }
-              className={`flex flex-col justify-between p-3.5 rounded-2xl border transition-all cursor-pointer active:scale-[0.98] ${
-                selectedProtein.price > 0
-                  ? 'bg-white border-[#ff6b35] shadow-sm'
-                  : 'bg-white border-[#eaedff]'
-              }`}
-            >
-              <div className="flex items-start justify-between w-full">
-                <span className="text-sm font-bold text-[#131b2e]">Double Fuel</span>
-                <input
-                  checked={selectedProtein.price > 0}
-                  onChange={() => {}}
-                  className="w-4 h-4 accent-[#ab3500]"
-                  name="protein_level"
-                  type="radio"
-                />
+              <div className="flex flex-col gap-2">
+                {[
+                  { name: 'Signature Garlic Teriyaki', desc: 'Simmered over 6 hours (Drizzled on top)' },
+                  { name: 'Spicy Sriracha Japanese Mayo', desc: 'Served in side dipping tub' },
+                  { name: 'Yuzu Citrus Ponzu', desc: 'Light, bright, soy-free alternative' },
+                ].map((s) => (
+                  <label
+                    key={s.name}
+                    onClick={() => setSelectedSauce(s.name)}
+                    className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                      selectedSauce === s.name
+                        ? 'bg-[#faf8ff] border-[#ff6b35]'
+                        : 'bg-white border-[#eaedff] hover:border-[#dae2fd]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <input
+                        checked={selectedSauce === s.name}
+                        onChange={() => {}}
+                        className="w-4 h-4 accent-[#ab3500]"
+                        name="sauce_choice"
+                        type="radio"
+                      />
+                      <div>
+                        <span className="text-sm font-bold text-[#131b2e]">{s.name}</span>
+                        <span className="text-xs text-[#594139] block">{s.desc}</span>
+                      </div>
+                    </div>
+                  </label>
+                ))}
               </div>
-              <div className="mt-4">
-                <span className="text-xs text-[#594139] block">+100g Extra</span>
-                <span className="text-xs text-[#ab3500] font-bold mt-0.5 block">+$2.20</span>
-              </div>
-            </label>
-          </div>
-        </section>
+            </section>
 
-        {/* 3. Free Add-ins (Checkbox - Up to 3) */}
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-bold text-[#131b2e]">3. Free Add-ins</h3>
-              <p className="text-xs text-[#594139]">Pick up to 3 fresh garnishes</p>
-            </div>
-            <span
-              className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold transition-colors ${
-                selectedAddins.length === 3
-                  ? 'bg-[#6cf8bb] text-[#00714d]'
-                  : 'bg-[#eaedff] text-[#131b2e]'
-              }`}
-            >
-              {selectedAddins.length} / 3 Selected
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            {addinOptions.map((opt) => {
-              const isChecked = selectedAddins.includes(opt.name);
-              return (
-                <label
-                  key={opt.id}
-                  onClick={() => handleAddinToggle(opt.name)}
-                  className={`flex items-center gap-2.5 p-3 rounded-2xl border transition-all cursor-pointer ${
-                    isChecked
-                      ? 'bg-white border-[#ff6b35] shadow-xs'
-                      : 'bg-white border-[#eaedff]'
-                  }`}
-                >
-                  <input
-                    checked={isChecked}
-                    onChange={() => {}}
-                    className="w-4 h-4 accent-[#ab3500] rounded"
-                    type="checkbox"
-                  />
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-bold text-[#131b2e] truncate">{opt.name}</span>
-                    <span className="text-[10px] text-[#594139]">{opt.desc}</span>
-                  </div>
+            {/* 5. Special Notes */}
+            <section className="bg-white rounded-3xl p-5 shadow-sm border border-[#eaedff] flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-bold text-[#131b2e]" htmlFor="special-instructions">
+                  5. Kitchen Notes
                 </label>
-              );
-            })}
-          </div>
-        </section>
+                <span className="text-xs text-[#594139]">Optional</span>
+              </div>
+              <textarea
+                id="special-instructions"
+                value={specialNotes}
+                onChange={(e) => setSpecialNotes(e.target.value)}
+                className="w-full p-3.5 rounded-2xl bg-[#faf8ff] border border-[#eaedff] text-[#131b2e] placeholder:text-[#594139]/60 text-sm outline-none focus:ring-2 focus:ring-[#ff6b35]/20 focus:border-[#ff6b35] resize-none transition-all"
+                maxLength={100}
+                placeholder="e.g., Light sauce, dressing on the side, extra napkins..."
+                rows={2}
+              ></textarea>
+            </section>
 
-        {/* 4. Sauce Style Preference */}
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-bold text-[#131b2e]">4. Sauce Style</h3>
-              <p className="text-xs text-[#594139]">How would you like your drizzle?</p>
+            {/* Desktop & Tablet In-Page Checkout Bar */}
+            <div className="hidden md:flex items-center justify-between gap-4 p-5 rounded-3xl bg-white shadow-md border border-[#eaedff]">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-bold text-[#594139]">Quantity:</span>
+                <div className="flex items-center bg-[#eaedff] rounded-2xl p-1 shadow-inner">
+                  <button
+                    aria-label="Decrease quantity"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-[#131b2e] hover:text-[#ab3500] transition-all shadow-xs"
+                    type="button"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">remove</span>
+                  </button>
+                  <span className="text-sm font-bold text-[#131b2e] w-8 text-center select-none">
+                    {quantity}
+                  </span>
+                  <button
+                    aria-label="Increase quantity"
+                    onClick={() => setQuantity(Math.min(9, quantity + 1))}
+                    className="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-[#131b2e] hover:text-[#ab3500] transition-all shadow-xs"
+                    type="button"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">add</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <span className="text-[10px] text-[#594139] uppercase font-bold tracking-wider block">
+                    Calculated Total
+                  </span>
+                  <span className="text-2xl font-black text-[#ab3500]">
+                    ${finalTotal.toFixed(2)}
+                  </span>
+                </div>
+                <button
+                  onClick={handleAddToTray}
+                  className="h-12 px-6 rounded-2xl bg-[#ff6b35] hover:bg-[#ab3500] text-white flex items-center gap-2 text-sm font-bold shadow-md hover:brightness-105 active:scale-95 transition-all"
+                  type="button"
+                >
+                  <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+                  <span>Add to Campus Tray</span>
+                </button>
+              </div>
             </div>
-            <span className="text-[10px] bg-[#eaedff] text-[#131b2e] px-2.5 py-0.5 rounded-full font-bold">
-              Pick 1
-            </span>
-          </div>
+          </form>
+        </div>
+      </div>
 
-          <div className="flex flex-col gap-2">
-            {/* Sauce 1 */}
-            <label
-              onClick={() => setSelectedSauce('Signature Garlic Teriyaki')}
-              className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer ${
-                selectedSauce === 'Signature Garlic Teriyaki'
-                  ? 'bg-white border-[#ff6b35]'
-                  : 'bg-white border-[#eaedff]'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <input
-                  checked={selectedSauce === 'Signature Garlic Teriyaki'}
-                  onChange={() => {}}
-                  className="w-4 h-4 accent-[#ab3500]"
-                  name="sauce_choice"
-                  type="radio"
-                />
-                <div>
-                  <span className="text-sm font-bold text-[#131b2e]">
-                    Signature Garlic Teriyaki
-                  </span>
-                  <span className="text-xs text-[#594139] block">
-                    Simmered over 6 hours (Drizzled on top)
-                  </span>
-                </div>
-              </div>
-              <span className="material-symbols-outlined text-[#ab3500] text-[20px]">star</span>
-            </label>
-
-            {/* Sauce 2 */}
-            <label
-              onClick={() => setSelectedSauce('Spicy Sriracha Japanese Mayo')}
-              className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer ${
-                selectedSauce === 'Spicy Sriracha Japanese Mayo'
-                  ? 'bg-white border-[#ff6b35]'
-                  : 'bg-white border-[#eaedff]'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <input
-                  checked={selectedSauce === 'Spicy Sriracha Japanese Mayo'}
-                  onChange={() => {}}
-                  className="w-4 h-4 accent-[#ab3500]"
-                  name="sauce_choice"
-                  type="radio"
-                />
-                <div>
-                  <span className="text-sm font-bold text-[#131b2e]">
-                    Spicy Sriracha Japanese Mayo
-                  </span>
-                  <span className="text-xs text-[#594139] block">
-                    Served in side dipping tub
-                  </span>
-                </div>
-              </div>
-              <span className="material-symbols-outlined text-[#d68900] text-[20px]">
-                local_fire_department
-              </span>
-            </label>
-
-            {/* Sauce 3 */}
-            <label
-              onClick={() => setSelectedSauce('Yuzu Citrus Ponzu')}
-              className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer ${
-                selectedSauce === 'Yuzu Citrus Ponzu'
-                  ? 'bg-white border-[#ff6b35]'
-                  : 'bg-white border-[#eaedff]'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <input
-                  checked={selectedSauce === 'Yuzu Citrus Ponzu'}
-                  onChange={() => {}}
-                  className="w-4 h-4 accent-[#ab3500]"
-                  name="sauce_choice"
-                  type="radio"
-                />
-                <div>
-                  <span className="text-sm font-bold text-[#131b2e]">Yuzu Citrus Ponzu</span>
-                  <span className="text-xs text-[#594139] block">
-                    Light, bright, soy-free alternative
-                  </span>
-                </div>
-              </div>
-            </label>
-          </div>
-        </section>
-
-        {/* 5. Kitchen Special Note */}
-        <section className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <label className="text-base font-bold text-[#131b2e]" htmlFor="special-instructions">
-              5. Kitchen Notes
-            </label>
-            <span className="text-xs text-[#594139]">Optional</span>
-          </div>
-          <div className="relative w-full">
-            <textarea
-              id="special-instructions"
-              value={specialNotes}
-              onChange={(e) => setSpecialNotes(e.target.value)}
-              className="w-full p-3.5 rounded-2xl bg-white border border-[#eaedff] text-[#131b2e] placeholder:text-[#594139]/60 text-sm shadow-xs outline-none focus:ring-2 focus:ring-[#ff6b35]/20 focus:border-[#ff6b35] resize-none transition-all"
-              maxLength={100}
-              placeholder="e.g., Light sauce, dressing strictly on the side, no sesame seeds..."
-              rows={2}
-            ></textarea>
-          </div>
-        </section>
-      </form>
-
-      {/* Sticky Bottom Tray Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl shadow-[0_-8px_20px_rgba(15,23,42,0.06)] px-4 py-3 pb-safe border-t border-[#eaedff]">
+      {/* Sticky Bottom Tray Bar (Only on Mobile) */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl shadow-[0_-8px_20px_rgba(15,23,42,0.06)] px-4 py-3 pb-safe border-t border-[#eaedff] md:hidden">
         <div className="max-w-md mx-auto flex items-center justify-between gap-3">
-          {/* Quantity Stepper */}
           <div className="flex items-center bg-[#eaedff] rounded-full p-1 shadow-inner flex-shrink-0">
             <button
               aria-label="Decrease quantity"
@@ -572,10 +592,9 @@ export const ItemCustomizerScreen: React.FC<ItemCustomizerScreenProps> = ({
             </button>
           </div>
 
-          {/* Add to Tray Primary CTA */}
           <button
             onClick={handleAddToTray}
-            className="flex-1 h-12 rounded-full bg-[#ff6b35] hover:bg-[#ab3500] text-white flex items-center justify-between px-5 text-sm font-bold shadow-lg hover:brightness-105 active:scale-[0.98] transition-all"
+            className="flex-1 h-12 rounded-full bg-[#ff6b35] hover:bg-[#ab3500] text-white flex items-center justify-between px-5 text-sm font-bold shadow-lg active:scale-[0.98] transition-all"
             type="button"
           >
             <span className="flex items-center gap-1.5">
@@ -589,9 +608,9 @@ export const ItemCustomizerScreen: React.FC<ItemCustomizerScreenProps> = ({
         </div>
       </div>
 
-      {/* Interactive Campus Delight Toast */}
+      {/* Confirmation Toast */}
       {showToast && (
-        <div className="fixed bottom-20 left-4 right-4 z-50 transition-all duration-300 ease-out flex items-center justify-between p-4 rounded-2xl bg-[#283044] text-[#eef0ff] shadow-2xl max-w-md mx-auto border border-white/10 animate-fade-in">
+        <div className="fixed bottom-20 md:bottom-8 left-4 right-4 z-50 transition-all duration-300 ease-out flex items-center justify-between p-4 rounded-2xl bg-[#283044] text-[#eef0ff] shadow-2xl max-w-md mx-auto border border-white/10 animate-fade-in">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-[#6ffbbe] flex items-center justify-center text-[#002113]">
               <span className="material-symbols-outlined text-[18px]">check</span>

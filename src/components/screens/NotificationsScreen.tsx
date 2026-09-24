@@ -34,7 +34,7 @@ export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({
   const earlierList = filteredNotifications.filter((n) => n.timestampGroup === 'earlier');
 
   return (
-    <div className="flex flex-col w-full px-4 pb-28 gap-4 pt-1">
+    <div className="flex flex-col w-full max-w-4xl mx-auto px-4 md:px-6 pb-28 md:pb-16 gap-4 pt-2">
       {/* Top Bar / Action Bar */}
       <div className="flex items-center justify-between pt-2">
         <div className="flex items-center gap-2">

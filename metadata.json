@@ -2,5 +2,7 @@
   "name": "CampusBite - Canteen & Smart Locker Pickup",
   "description": "Smart campus food ordering with live kitchen prep tracking, heated pickup locker passes, and CampusCard meal plans.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
